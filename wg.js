@@ -59,6 +59,7 @@ const app = () => {
               .then(() => {
                 console.log('service restarted')
                 defaultIP = ip
+                clearInterval(timerId)
                 timerId = setInterval(() => {
                   app()
                 }, timer)
@@ -69,11 +70,15 @@ const app = () => {
               })
           })
           .catch((error) => {
+            clearInterval(timerId)
             console.log('stop error: ' + error)
           })
+      } else {
+        console.log('same ip: ' + ip)
       }
     })
     .catch((error) => {
+      clearInterval(timerId)
       console.log('dns error: ' + error)
     })
 }
