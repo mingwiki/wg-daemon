@@ -7,7 +7,7 @@ const options = {
 }
 const serviceName = `WireGuardTunnel$${tunnelName}`
 const log = (val) => {
-  console.log(new Date().toLocaleString() + '\n' + val)
+  console.log(val)
 }
 const service = {
   checkDns: () => {
