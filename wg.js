@@ -6,9 +6,6 @@ const options = {
   family: 4,
 }
 const serviceName = `WireGuardTunnel$${tunnelName}`
-const log = (val) => {
-  console.log(val)
-}
 const service = {
   checkDns: () => {
     return new Promise((resolve, reject) => {
@@ -22,7 +19,7 @@ const service = {
   },
   start: () => {
     return new Promise((resolve, reject) => {
-      log('service starting...')
+      console.log('service starting...')
       child.exec(`net start ${serviceName}`, function (error, stdout, stderr) {
         if (error !== null) {
           reject(error)
@@ -34,7 +31,7 @@ const service = {
   },
   stop: () => {
     return new Promise((resolve, reject) => {
-      log('service stopping...')
+      console.log('service stopping...')
       child.exec(`net stop ${serviceName}`, function (error, stdout, stderr) {
         if (error !== null) {
           reject(error)
@@ -52,15 +49,15 @@ const app = () => {
     .checkDns()
     .then((ip) => {
       if (ip !== defaultIP) {
-        log('current ip: ' + ip)
-        log('old ip: ' + defaultIP)
+        console.log('current ip: ' + ip)
+        console.log('old ip: ' + defaultIP)
         service
           .stop()
           .then(() => {
             service
               .start()
               .then(() => {
-                log('service restarted')
+                console.log('service restarted')
                 defaultIP = ip
                 timerId = setInterval(() => {
                   app()
@@ -68,16 +65,16 @@ const app = () => {
               })
               .catch((error) => {
                 clearInterval(timerId)
-                log('start error: ' + error)
+                console.log('start error: ' + error)
               })
           })
           .catch((error) => {
-            log('stop error: ' + error)
+            console.log('stop error: ' + error)
           })
       }
     })
     .catch((error) => {
-      log('dns error: ' + error)
+      console.log('dns error: ' + error)
     })
 }
 app()
