@@ -14,7 +14,7 @@ const service = {
       console.log(new Date().toLocaleString())
       dns.lookup(domain, options, (err, addresses) => {
         if (err) {
-          resolve(err)
+          reject(err)
         }
         resolve(addresses)
       })
