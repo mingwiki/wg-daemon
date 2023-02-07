@@ -6,12 +6,12 @@ const options = {
   family: 4,
 }
 const serviceName = `WireGuardTunnel$${tunnelName}`
-let defaultIP = '127.0.0.1'
+const log = (val) => {
+  console.log(new Date().toLocaleString() + '\n' + val)
+}
 const service = {
   checkDns: () => {
     return new Promise((resolve, reject) => {
-      console.log('\n')
-      console.log(new Date().toLocaleString())
       dns.lookup(domain, options, (err, addresses) => {
         if (err) {
           reject(err)
@@ -22,7 +22,7 @@ const service = {
   },
   start: () => {
     return new Promise((resolve, reject) => {
-      console.log('service starting...')
+      log('service starting...')
       child.exec(`net start ${serviceName}`, function (error, stdout, stderr) {
         if (error !== null) {
           reject(error)
@@ -34,7 +34,7 @@ const service = {
   },
   stop: () => {
     return new Promise((resolve, reject) => {
-      console.log('service stopping...')
+      log('service stopping...')
       child.exec(`net stop ${serviceName}`, function (error, stdout, stderr) {
         if (error !== null) {
           reject(error)
@@ -45,39 +45,39 @@ const service = {
     })
   },
 }
-
+let defaultIP = '127.0.0.1'
+let timerId
 const app = () => {
   service
     .checkDns()
     .then((ip) => {
       if (ip !== defaultIP) {
-        console.log('current ip: ' + ip)
-        console.log('old ip: ' + defaultIP)
+        log('current ip: ' + ip)
+        log('old ip: ' + defaultIP)
         service
           .stop()
           .then(() => {
             service
               .start()
               .then(() => {
-                console.log('service restarted')
+                log('service restarted')
                 defaultIP = ip
+                timerId = setInterval(() => {
+                  app()
+                }, timer)
               })
               .catch((error) => {
-                console.log('start error: ' + error)
+                clearInterval(timerId)
+                log('start error: ' + error)
               })
           })
           .catch((error) => {
-            console.log('stop error: ' + error)
-            service.start()
+            log('stop error: ' + error)
           })
-      } else {
-        console.log('Same IP: ' + ip)
       }
     })
     .catch((error) => {
-      console.log('dns error: ' + error)
+      log('dns error: ' + error)
     })
 }
-setInterval(() => {
-  app()
-}, timer)
+app()
