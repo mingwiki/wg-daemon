@@ -15,7 +15,8 @@ wireguard /uninstalltunnelservice wg
 ## Usage
 
 ```js
-node wg.js
+pm2 start wg.js --time
+pm2 restart wg --time
 ```
 
 ## Config
