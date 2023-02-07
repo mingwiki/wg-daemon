@@ -58,11 +58,13 @@ const app = () => {
           .then(() => {
             service
               .start()
-              .then(() => console.log('service restarted'))
+              .then(() => {
+                console.log('service restarted')
+                defaultIP = ip
+              })
               .catch((error) => {
                 console.log('start error: ' + error)
               })
-            defaultIP = ip
           })
           .catch((error) => {
             console.log('stop error: ' + error)
