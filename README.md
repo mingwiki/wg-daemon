@@ -11,3 +11,13 @@ wireguard /uninstalltunnelservice wg
 > wireguard /installmanagerservice
 > wireguard /uninstallmanagerservice
 ```
+
+## Usage
+
+```js
+node wg.js
+```
+
+## Config
+
+Edit the config.js file
